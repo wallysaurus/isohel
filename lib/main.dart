@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_shaders/flutter_shaders.dart';
 
 void main() {
-  runApp( const Isohel() );
+  runApp(const Isohel());
 }
 
 class Isohel extends StatelessWidget {
@@ -11,12 +11,9 @@ class Isohel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: IsohelMainScreen()
-    );
+    return const MaterialApp(home: IsohelMainScreen());
   }
 }
-
 
 class IsohelMainScreen extends StatelessWidget {
   const IsohelMainScreen({super.key});
@@ -25,36 +22,34 @@ class IsohelMainScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: ShaderBuilder(
-        assetKey: 'shaders/background.glsl',
+        assetKey: 'shaders/background.frag',
         (context, shader, child) => CustomPaint(
           size: MediaQuery.of(context).size,
           painter: ShaderPainter(
             shader: shader,
           ),
-        )
         ),
+        child: const Center(
+          child: CircularProgressIndicator(),
+        ),
+      ),
     );
   }
 }
 
 class ShaderPainter extends CustomPainter {
   ShaderPainter({required this.shader});
-  ui.FragmentShader shader;
+  final FragmentShader shader;
 
   @override
   void paint(Canvas canvas, Size size) {
     shader.setFloat(0, size.width);
-    shader.setFloat(0, size.height);
+    shader.setFloat(1, size.height);
 
-    final paint = Paint()..shader = shader;
     canvas.drawRect(
-      Rect.fromLTWH(0, 0, size.width, size.height),
-      paint
-    );
+        Rect.fromLTWH(0, 0, size.width, size.height), Paint()..shader = shader);
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return false;
-  }
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }
